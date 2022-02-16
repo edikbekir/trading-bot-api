@@ -1,7 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+  Query
+} from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CookieDto } from './dto/cookie.dto';
+import { Types } from 'mongoose';
 
 @Controller('profiles')
 export class ProfilesController {
@@ -9,13 +23,17 @@ export class ProfilesController {
 
   @Post()
   create(@Body() createProfileDto: CreateProfileDto) {
-    console.log(createProfileDto);
     return this.profilesService.create(createProfileDto);
   }
 
   @Get()
   findAll() {
     return this.profilesService.findAll();
+  }
+
+  @Get()
+  findByUser(@Query('userId') id: Types.ObjectId) {
+    // return this.profilesService.findByFilter({ user_id: id });
   }
 
   @Get(':id')

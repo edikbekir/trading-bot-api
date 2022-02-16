@@ -3,7 +3,7 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Profile, ProfileDocument } from './profile.schema';
+import { Profile, ProfileDocument } from './schemas/profile.schema';
 
 @Injectable()
 export class ProfilesService {
@@ -23,6 +23,10 @@ export class ProfilesService {
 
     findOne(id: number) {
         return `This action returns a #${id} profile`;
+    }
+
+    findByFilter(filter: Partial<Profile>) {
+        return this.profileModel.find(filter);
     }
 
     update(id: number, updateProfileDto: UpdateProfileDto) {

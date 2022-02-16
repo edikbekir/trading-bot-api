@@ -3,7 +3,7 @@ db:
     url: 'cluster0.llcca.mongodb.net'
     database: 'coinlist'
     user: 'coinlister'
-    password: ''
+    password: 'p7nZUdHzkfYAJ2Z'
     params:
       retryWrites: true
       w: 'majority'

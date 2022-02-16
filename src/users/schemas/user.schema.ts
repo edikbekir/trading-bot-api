@@ -1,30 +1,33 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
-export type UserDocument = User & Document;
+import { Profile } from '../../profiles/schemas/profile.schema';
+import * as mongoose from 'mongoose';
 
 @Schema()
 export class User {
-    @Prop({ required: true, index: { unique: true } })
-    username: string;
+    @Prop({ unique: true })
+    username!: string;
 
-    @Prop({ required: true })
-    email: string;
-
-    @Prop({ required: true })
-    password: string;
+    @Prop({ unique: true })
+    email!: string;
 
     @Prop()
+    password!: string;
+
+    @Prop({ default: false })
     isSubscribed?: boolean;
 
-    @Prop({ enum: ['100', '500', '1000'] })
+    @Prop({ enum: ['100', '500', '1000'], default: '100' })
     numberOfProfiles?: string
+
+    /* TODO: makes sense to do it separately */
+    // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }] })
+    // profiles?: Profile[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
 
 UserSchema.pre('save', async function(next) {
     try {
@@ -39,3 +42,5 @@ UserSchema.pre('save', async function(next) {
         return next(err);
     }
 });
+
+export type UserDocument = User & Document;
