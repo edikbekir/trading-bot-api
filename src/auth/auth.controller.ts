@@ -3,7 +3,10 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { AuthRo } from './auth.interface';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(
@@ -13,16 +16,19 @@ export class AuthController {
     }
 
     @Post('register')
-    async register(@Body() registerDto: CreateUserDto) {
+    @ApiCreatedResponse({ description: 'User has been created', type: AuthRo })
+    async register(@Body() registerDto: CreateUserDto): Promise<AuthRo> {
         const user = await this.userService.create(registerDto);
+
         const payload = { username: user.username };
-        const token = await this.authService.signPayload(payload);
+        const token = this.authService.signPayload(payload);
 
         return { user, token };
     }
 
     @Post('login')
-    async login(@Body() loginDto: LoginDto) {
+    @ApiCreatedResponse({ description: 'Successful login', type: AuthRo })
+    async login(@Body() loginDto: LoginDto): Promise<AuthRo> {
         const user = await this.userService.findByLogin(loginDto);
         const payload = { username: user.username };
         const token = this.authService.signPayload(payload);
