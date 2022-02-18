@@ -4,6 +4,7 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Profile, ProfileDocument } from './schemas/profile.schema';
+import { ProfileDto } from './dto/profile.dto';
 
 @Injectable()
 export class ProfilesService {
@@ -11,29 +12,42 @@ export class ProfilesService {
         @InjectModel(Profile.name) private profileModel: Model<ProfileDocument>,
     ) {
     }
-
-    create(createProfileDto: CreateProfileDto): Promise<Profile> {
+    async create(createProfileDto: CreateProfileDto): Promise<ProfileDto> {
         const createdProfile = new this.profileModel(createProfileDto);
-        return createdProfile.save();
+        await createdProfile.save();
+
+        return this.toProfileDto(createdProfile);
     }
 
-    findAll() {
-        return `This action returns all profiles`;
+    async findAll(): Promise<ProfileDto[]> {
+        const profiles = await this.profileModel.find().exec();
+
+        return profiles.map(this.toProfileDto);
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} profile`;
+    findOne(id: string): Promise<ProfileDto> {
+        return this.query({ id }).then(this.toProfileDto);
     }
 
-    findByFilter(filter: Partial<Profile>) {
-        return this.profileModel.find(filter);
+    async update(id: string, updateProfileDto: UpdateProfileDto): Promise<ProfileDto> {
+        await this.profileModel.updateOne({ id }, updateProfileDto);
+
+        return this.findOne(id);
     }
 
-    update(id: number, updateProfileDto: UpdateProfileDto) {
-        return `This action updates a #${id} profile`;
+    async remove(id: string): Promise<boolean> {
+        await this.profileModel.deleteOne({ id }).exec();
+
+        return true;
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} profile`;
+    private toProfileDto(data: Profile): ProfileDto {
+        const { id, name, credentials, proxy, cookie, twoFA } = data;
+
+        return { id, name, credentials, proxy, cookie, twoFA };
+    }
+
+    private query(filter: Partial<ProfileDto>): Promise<ProfileDto> {
+        return this.profileModel.findOne(filter ).exec();
     }
 }

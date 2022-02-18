@@ -1,26 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
-@Schema()
+@Schema({ _id: false })
 export class Proxy {
-    @Prop({ type: Types.ObjectId })
-    profile_id: Types.ObjectId;
+	@Prop()
+	name!: string;
 
-    @Prop()
-    name!: string;
+	@Prop()
+	user!: string;
 
-    @Prop()
-    user!: string
+	@Prop()
+	password!: string;
 
-    @Prop()
-    password!: string;
+	@Prop()
+	domain!: string;
 
-    @Prop()
-    domain!: string;
-
-    @Prop()
-    port!: string;
+	@Prop()
+	port!: number;
 }
 
-export type ProxyDocument = Proxy & Document;
 export const ProxySchema = SchemaFactory.createForClass(Proxy);
+
+export type ProxyDocument = Proxy & Document;

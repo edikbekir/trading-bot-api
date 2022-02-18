@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+@Schema({ id: true })
 export class User {
     id: string;
 
@@ -18,10 +18,6 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-UserSchema.virtual('id', function () {
-    return this._id.toHexString();
-});
 
 UserSchema.pre('save', async function (next) {
     try {

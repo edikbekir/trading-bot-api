@@ -1,17 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
-@Schema()
+@Schema({ _id: false })
 export class TwoFA {
-    @Prop({type: Types.ObjectId})
-    profile_id: Types.ObjectId;
+	@Prop()
+	mnemonic!: string;
 
-    @Prop()
-    mnemonic!: string;
-
-    @Prop({ default: false })
-    isUsed?: boolean;
+	@Prop({ default: false })
+	isUsed?: boolean;
 }
 
-export type TwoFADocument = TwoFA & Document;
 export const TwoFASchema = SchemaFactory.createForClass(TwoFA);
+
+export type TwoFADocument = TwoFA & Document;

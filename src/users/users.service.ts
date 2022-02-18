@@ -6,7 +6,6 @@ import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dto/user.dto';
-import * as mongoose from 'mongoose';
 
 
 @Injectable()
