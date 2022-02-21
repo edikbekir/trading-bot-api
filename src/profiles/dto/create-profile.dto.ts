@@ -11,20 +11,12 @@ class Credentials {
 	password!: string;
 }
 
-class CookieDto {
-	@ApiProperty()
-	file!: string;
-}
-
 export class CreateProfileDto {
 	@ApiProperty()
 	name!: string;
 
 	@ApiProperty({ type: Credentials })
 	credentials!: Credentials;
-
-	@ApiProperty({ type: CookieDto })
-	cookie!: CookieDto;
 
 	@ApiProperty({ type: ProxyDto })
 	proxy!: ProxyDto;

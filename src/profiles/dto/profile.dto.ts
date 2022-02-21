@@ -10,7 +10,7 @@ export class ProfileDto {
     id: string;
     name: string;
     credentials: Credentials;
-    cookie: { file: string };
+    // cookie: { file: string };
     proxy: ProxyDto;
     twoFA: TwoFADto;
 }

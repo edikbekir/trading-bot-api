@@ -42,9 +42,9 @@ export class ProfilesService {
     }
 
     private toProfileDto(data: Profile): ProfileDto {
-        const { id, name, credentials, proxy, cookie, twoFA } = data;
+        const { id, name, credentials, proxy, twoFA } = data;
 
-        return { id, name, credentials, proxy, cookie, twoFA };
+        return { id, name, credentials, proxy, twoFA };
     }
 
     private query(filter: Partial<ProfileDto>): Promise<ProfileDto> {

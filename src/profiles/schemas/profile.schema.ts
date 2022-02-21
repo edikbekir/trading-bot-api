@@ -24,8 +24,8 @@ export class Profile {
 	@Prop({ type: Credentials })
 	credentials!: Credentials;
 
-	@Prop({ type: Cookie })
-	cookie!: Cookie;
+	// @Prop({ type: Cookie })
+	// cookie!: Cookie;
 
 	@Prop({ type: Proxy })
 	proxy!: Proxy;

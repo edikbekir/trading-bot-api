@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Patch,
+	Post,
+	Query,
+	UploadedFile, UploadedFiles,
+	UseInterceptors, ValidationPipe
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 import { ProfilesService } from './profiles.service';
@@ -6,6 +17,7 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { TransformInterceptor } from '../transform.interceptor';
 import { ProfileDto } from './dto/profile.dto';
+import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 
 @ApiTags('Profiles')
@@ -16,8 +28,11 @@ export class ProfilesController {
 	}
 
 	@Post()
-	create(@Body() createProfileDto: CreateProfileDto): Promise<ProfileDto> {
-		return this.profilesService.create(createProfileDto);
+	@UseInterceptors(AnyFilesInterceptor())
+	create(@UploadedFiles() files, @Body() body: { profile: string }): Promise<ProfileDto> {
+		const profile: CreateProfileDto = JSON.parse(body?.profile);
+
+		return this.profilesService.create(profile);
 	}
 
 	@Get()
