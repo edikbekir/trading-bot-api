@@ -14,4 +14,5 @@ const getMongodbURI = () => {
 
 export default () => ({
     databaseURI: getMongodbURI(),
+    ...config,
 });

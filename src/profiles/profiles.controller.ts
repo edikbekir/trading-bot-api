@@ -2,7 +2,7 @@ import {
 	Body,
 	Controller,
 	Delete,
-	Get,
+	Get, HttpException, HttpStatus,
 	Param,
 	Patch,
 	Post,
@@ -29,10 +29,12 @@ export class ProfilesController {
 
 	@Post()
 	@UseInterceptors(AnyFilesInterceptor())
-	create(@UploadedFiles() files, @Body() body: { profile: string }): Promise<ProfileDto> {
+	async create(@UploadedFiles() files: Express.Multer.File[], @Body() body: { profile: string }): Promise<ProfileDto> {
+		if (!files.length) throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
+
 		const profile: CreateProfileDto = JSON.parse(body?.profile);
 
-		return this.profilesService.create(profile);
+		return this.profilesService.create(profile, files);
 	}
 
 	@Get()

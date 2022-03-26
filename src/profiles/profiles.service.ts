@@ -5,16 +5,25 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Profile, ProfileDocument } from './schemas/profile.schema';
 import { ProfileDto } from './dto/profile.dto';
+import { StorageService } from '../providers/storage/storage.service';
 
 @Injectable()
 export class ProfilesService {
     constructor(
         @InjectModel(Profile.name) private profileModel: Model<ProfileDocument>,
+        private readonly storageService: StorageService
     ) {
     }
-    async create(createProfileDto: CreateProfileDto): Promise<ProfileDto> {
-        const createdProfile = new this.profileModel(createProfileDto);
+    async create(createProfileDto: CreateProfileDto, files: Express.Multer.File[]): Promise<ProfileDto> {
+        const createdProfile: ProfileDocument = new this.profileModel(createProfileDto);
         await createdProfile.save();
+
+        /*
+        * Save a cookie file to GCP bucket
+        * TODO: Should be moved to another place
+        * */
+        const path: string = `cookies/${createdProfile.id}.json`;
+        this.storageService.save(path, files[0]);
 
         return this.toProfileDto(createdProfile);
     }

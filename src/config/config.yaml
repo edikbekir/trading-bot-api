@@ -7,3 +7,8 @@ db:
     params:
       retryWrites: true
       w: 'majority'
+storage:
+  bucket:
+    # TODO: Should be changed to coinlister-bucket
+    name: 'coinlister_proxies_bucket'
+

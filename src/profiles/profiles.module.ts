@@ -5,9 +5,11 @@ import { MODELS } from './schemas/models';
 
 import { ProfilesService } from './profiles.service';
 import { ProfilesController } from './profiles.controller';
+import { StorageModule } from '../providers/storage/storage.module';
 
 @Module({
     imports: [
+        StorageModule,
         MongooseModule.forFeature(MODELS),
     ],
     controllers: [

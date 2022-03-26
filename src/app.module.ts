@@ -18,7 +18,7 @@ const CORE_MODULES = [
     AuthModule,
     MulterModule.register({
         dest: '/tmp/upload',
-    })
+    }),
 ];
 
 @Module({
