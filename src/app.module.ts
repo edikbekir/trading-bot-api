@@ -4,8 +4,6 @@ import { MulterModule } from '@nestjs/platform-express';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { ProfilesModule } from './profiles/profiles.module';
-import { SalesModule } from './sales/sales.module';
 
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
@@ -25,8 +23,6 @@ const CORE_MODULES = [
     imports: [
         ...CORE_MODULES,
         UsersModule,
-        ProfilesModule,
-        SalesModule,
     ],
     controllers: [
         AppController,

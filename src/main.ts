@@ -13,10 +13,10 @@ async function bootstrap() {
   }));
 
   const config = new DocumentBuilder()
-      .setTitle('Coinlister')
-      .setDescription('The coinlister API description')
+      .setTitle('Trading Bot')
+      .setDescription('The Trading Bot API description')
       .setVersion('1.0')
-      .addTag('Coinlist')
+      .addTag('Bot')
       .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

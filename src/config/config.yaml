@@ -1,8 +1,8 @@
 db:
   mongodb:
-    url: 'cluster0.llcca.mongodb.net'
-    database: 'coinlist'
-    user: 'coinlister'
+    url: 'tradingbot.lorm4.mongodb.net'
+    database: 'tradingbot'
+    user: 'admin'
     password: 'p7nZUdHzkfYAJ2Z'
     params:
       retryWrites: true
