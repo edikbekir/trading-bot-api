@@ -1,2 +1,2 @@
-# Coinlister API
+# Trading BOT API
 
