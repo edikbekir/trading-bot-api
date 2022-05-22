@@ -8,16 +8,18 @@ async function bootstrap() {
 
   app.enableCors();
 
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
-      .setTitle('Trading Bot')
-      .setDescription('The Trading Bot API description')
-      .setVersion('1.0')
-      .addTag('Bot')
-      .build();
+    .setTitle('Trading Bot')
+    .setDescription('The Trading Bot API description')
+    .setVersion('1.0')
+    .addTag('Bot')
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 

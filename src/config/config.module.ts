@@ -4,16 +4,11 @@ import { ConfigModule as ConfigurationModule } from '@nestjs/config';
 import configuration from './configuration';
 
 const configurationProvider = ConfigurationModule.forRoot({
-    load: [configuration],
+  load: [configuration],
 });
 
 @Module({
-    imports: [
-        configurationProvider,
-    ],
-    exports: [
-        configurationProvider,
-    ]
+  imports: [configurationProvider],
+  exports: [configurationProvider],
 })
-export class ConfigModule {
-}
+export class ConfigModule {}

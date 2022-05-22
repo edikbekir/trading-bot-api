@@ -9,30 +9,29 @@ import { AuthRo } from './auth.interface';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private authService: AuthService,
-        private userService: UsersService,
-    ) {
-    }
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService,
+  ) {}
 
-    @Post('register')
-    @ApiCreatedResponse({ description: 'User has been created', type: AuthRo })
-    async register(@Body() registerDto: CreateUserDto): Promise<AuthRo> {
-        const user = await this.userService.create(registerDto);
+  @Post('register')
+  @ApiCreatedResponse({ description: 'User has been created', type: AuthRo })
+  async register(@Body() registerDto: CreateUserDto): Promise<AuthRo> {
+    const user = await this.userService.create(registerDto);
 
-        const payload = { username: user.username };
-        const token = this.authService.signPayload(payload);
+    const payload = { username: user.username };
+    const token = this.authService.signPayload(payload);
 
-        return { user, token };
-    }
+    return { user, token };
+  }
 
-    @Post('login')
-    @ApiCreatedResponse({ description: 'Successful login', type: AuthRo })
-    async login(@Body() loginDto: LoginDto): Promise<AuthRo> {
-        const user = await this.userService.findByLogin(loginDto);
-        const payload = { username: user.username };
-        const token = this.authService.signPayload(payload);
+  @Post('login')
+  @ApiCreatedResponse({ description: 'Successful login', type: AuthRo })
+  async login(@Body() loginDto: LoginDto): Promise<AuthRo> {
+    const user = await this.userService.findByLogin(loginDto);
+    const payload = { username: user.username };
+    const token = this.authService.signPayload(payload);
 
-        return { user, token };
-    }
+    return { user, token };
+  }
 }

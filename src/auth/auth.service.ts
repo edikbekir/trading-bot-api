@@ -4,13 +4,12 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-	constructor(
-		private userService: UsersService,
-		private jwtService: JwtService
-	) {
-	}
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
-	signPayload(payload: any): string {
-		return this.jwtService.sign(payload);
-	}
+  signPayload(payload: any): string {
+    return this.jwtService.sign(payload);
+  }
 }

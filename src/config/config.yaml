@@ -11,4 +11,3 @@ storage:
   bucket:
     # TODO: Should be changed to coinlister-bucket
     name: 'coinlister_proxies_bucket'
-
