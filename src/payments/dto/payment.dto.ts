@@ -17,5 +17,8 @@ export class PaymentDto {
   createdAt!: Date;
 
   @ApiProperty()
+  servicePaymentId!: string;
+
+  @ApiProperty()
   updatedAt!: Date;
 }

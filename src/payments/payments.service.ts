@@ -29,8 +29,24 @@ export class PaymentsService {
       { $push: { payments: createPayment } },
     );
 
-    const { id, status, total, currency, createdAt, updatedAt } = createPayment;
+    const {
+      id,
+      status,
+      total,
+      currency,
+      createdAt,
+      updatedAt,
+      servicePaymentId,
+    } = createPayment;
 
-    return { id, status, total, currency, createdAt, updatedAt };
+    return {
+      id,
+      status,
+      total,
+      currency,
+      createdAt,
+      updatedAt,
+      servicePaymentId,
+    };
   }
 }

@@ -11,6 +11,9 @@ export class Payment {
   createdAt: Date;
 
   @Prop()
+  servicePaymentId: string;
+
+  @Prop()
   updatedAt: Date;
 
   @Prop()

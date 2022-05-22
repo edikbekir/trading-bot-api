@@ -17,4 +17,8 @@ export class CreatePaymentDto {
   @ApiProperty()
   @IsString()
   userId!: string;
+
+  @ApiProperty()
+  @IsString()
+  servicePaymentId!: string;
 }
