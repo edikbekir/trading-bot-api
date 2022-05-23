@@ -19,7 +19,7 @@ export class AuthController {
   async register(@Body() registerDto: CreateUserDto): Promise<AuthRo> {
     const user = await this.userService.create(registerDto);
 
-    const payload = { username: user.username };
+    const payload = { email: user.email };
     const token = this.authService.signPayload(payload);
 
     return { user, token };
@@ -29,7 +29,7 @@ export class AuthController {
   @ApiCreatedResponse({ description: 'Successful login', type: AuthRo })
   async login(@Body() loginDto: LoginDto): Promise<AuthRo> {
     const user = await this.userService.findByLogin(loginDto);
-    const payload = { username: user.username };
+    const payload = { email: user.email };
     const token = this.authService.signPayload(payload);
 
     return { user, token };

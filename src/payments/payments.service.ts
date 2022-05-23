@@ -23,8 +23,7 @@ export class PaymentsService {
     });
     await createPayment.save();
 
-    const user = this.userModel.findById(userId);
-    await user.findOneAndUpdate(
+    await this.userModel.findOneAndUpdate(
       { _id: new Types.ObjectId(userId) },
       { $push: { payments: createPayment } },
     );
