@@ -6,14 +6,14 @@ import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dto/user.dto';
-
+import { Types } from 'mongoose';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDto> {
-    const { username } = createUserDto;
-    const user = await this.query({ username });
+    const { email } = createUserDto;
+    const user = await this.query({ email });
 
     if (user) {
       throw new HttpException('user already exists', HttpStatus.BAD_REQUEST);
@@ -47,7 +47,7 @@ export class UsersService {
 
   async findOne(id: string): Promise<UserDto> {
     return await this.userModel
-      .findOne({ id })
+      .findOne({ _id: new Types.ObjectId(id) })
       .populate('payments')
       .exec()
       .then(this.toUserDto);
