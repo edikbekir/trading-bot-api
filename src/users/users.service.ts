@@ -46,7 +46,6 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<UserDto> {
-    console.log(id);
     return await this.userModel
       .findOne({ _id: new Types.ObjectId(id) })
       .populate('payments')
