@@ -10,6 +10,10 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { HttpService } from '@nestjs/axios';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import configuration from 'src/config/configuration';
+import {
+  Referral,
+  ReferralDocument,
+} from 'src/referrals/schemas/referral.schema';
 
 const nowPaymentsSecretKey = configuration().nowPaymentsSecretKey;
 
@@ -18,6 +22,7 @@ export class PaymentsService {
   constructor(
     @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Referral.name) private referralModel: Model<ReferralDocument>,
     private httpService: HttpService,
   ) {}
 
@@ -91,15 +96,39 @@ export class PaymentsService {
     await currentUser.save();
 
     if (currentUser.referredBy) {
-      const referredByUser = await this.userModel.findOne({
-        username: currentUser.referredBy,
-      });
-      referredByUser.balance = String(
-        parseFloat(referredByUser.balance || '0') +
+      const parentUser = await this.userModel
+        .findOne({
+          username: currentUser.referredBy,
+        })
+        .populate('referrals');
+
+      parentUser.balance = String(
+        parseFloat(parentUser.balance || '0') +
           parseFloat(String(Number(createPaymentDto.amount) * 0.05)),
       );
+      parentUser.referrals.map(async (r) => {
+        if (r.name === currentUser.username) {
+          await this.referralModel
+            .updateOne(
+              {
+                _id: new Types.ObjectId(r.id),
+              },
+              {
+                reward: String(
+                  parseFloat(r.reward || '0') +
+                    parseFloat(String(Number(createPaymentDto.amount) * 0.05)),
+                ),
+                amount: String(
+                  parseFloat(r.amount || '0') +
+                    parseFloat(String(Number(createPaymentDto.amount))),
+                ),
+              },
+            )
+            .exec();
+        }
+      });
 
-      await referredByUser.save();
+      await parentUser.save();
     }
 
     await this.userModel.findOneAndUpdate(
