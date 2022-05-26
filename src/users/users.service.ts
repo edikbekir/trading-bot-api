@@ -107,10 +107,27 @@ export class UsersService {
   }
 
   toUserDto(data: User): UserDto {
-    const { username, email, id, payments, referredBy, createdAt, referrals } =
-      data;
+    const {
+      username,
+      email,
+      id,
+      payments,
+      referredBy,
+      createdAt,
+      referrals,
+      balance,
+    } = data;
 
-    return { username, email, id, payments, referredBy, createdAt, referrals };
+    return {
+      username,
+      email,
+      id,
+      payments,
+      referredBy,
+      createdAt,
+      referrals,
+      balance,
+    };
   }
 
   private query(filter: Partial<User>): Promise<User> {

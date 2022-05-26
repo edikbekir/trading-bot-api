@@ -26,6 +26,7 @@ export class PaymentsService {
       const { userId, orderId, amount, currency } = createInvoiceDto;
       const successUrl = this._getSuccessUrl(userId, orderId, amount, currency);
       const cancelUrl = this._getCancelUrl(userId, orderId, amount, currency);
+      console.log(successUrl);
       const invoice = await this.httpService
         .post(
           'https://api.nowpayments.io/v1/invoice',
@@ -72,6 +73,34 @@ export class PaymentsService {
       ...createPaymentDto,
     });
     await createPayment.save();
+
+    const currentUser = await this.userModel.findOne({
+      _id: new Types.ObjectId(userId),
+    });
+
+    await currentUser.updateOne(
+      { _id: new Types.ObjectId(userId) },
+      { $push: { payments: createPayment } },
+    );
+
+    currentUser.balance = String(
+      parseFloat(currentUser.balance || '0') +
+        parseFloat(createPaymentDto.amount),
+    );
+
+    await currentUser.save();
+
+    if (currentUser.referredBy) {
+      const referredByUser = await this.userModel.findOne({
+        username: currentUser.referredBy,
+      });
+      referredByUser.balance = String(
+        parseFloat(referredByUser.balance || '0') +
+          parseFloat(String(Number(createPaymentDto.amount) * 0.05)),
+      );
+
+      await referredByUser.save();
+    }
 
     await this.userModel.findOneAndUpdate(
       { _id: new Types.ObjectId(userId) },
