@@ -5,13 +5,13 @@ export class Payment {
   id: string;
 
   @Prop()
-  total: string;
+  amount: string;
 
   @Prop()
   createdAt: Date;
 
-  @Prop()
-  servicePaymentId: string;
+  @Prop({ unique: true })
+  orderId: string;
 
   @Prop()
   updatedAt: Date;

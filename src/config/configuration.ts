@@ -16,7 +16,12 @@ const getMongodbURI = () => {
   return `mongodb+srv://${user}:${password}@${url}/${database}?${connectionParams}`;
 };
 
+const getNowPaymentsSecretKey = () => {
+  return config?.nowpayments?.secret_key;
+};
+
 export default () => ({
   databaseURI: getMongodbURI(),
+  nowPaymentsSecretKey: getNowPaymentsSecretKey(),
   ...config,
 });

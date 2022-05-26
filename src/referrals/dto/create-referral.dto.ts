@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class CreatePaymentDto {
+export class CreateReferralDto {
   @ApiProperty()
   @IsString()
-  amount!: string;
+  total!: string;
 
   @ApiProperty()
   @IsString()
@@ -20,5 +20,5 @@ export class CreatePaymentDto {
 
   @ApiProperty()
   @IsString()
-  orderId!: string;
+  servicePaymentId!: string;
 }

@@ -1,24 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PaymentDto {
+export class ReferralDto {
   @ApiProperty()
   id: string;
-
-  @ApiProperty()
-  currency!: string;
-
-  @ApiProperty()
-  status!: string;
-
-  @ApiProperty()
-  amount!: string;
 
   @ApiProperty()
   createdAt!: Date;
 
   @ApiProperty()
-  orderId!: string;
+  name!: string;
 
   @ApiProperty()
-  updatedAt!: Date;
+  amount!: string;
+
+  @ApiProperty()
+  reward!: string;
 }

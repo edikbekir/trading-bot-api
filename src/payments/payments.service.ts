@@ -6,13 +6,63 @@ import { Payment, PaymentDocument } from '../payments/schemas/payment.schema';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../users/schemas/user.schema';
 import { Types } from 'mongoose';
+import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { HttpService } from '@nestjs/axios';
+import { CreateInvoiceDto } from './dto/create-invoice.dto';
+import configuration from 'src/config/configuration';
+
+const nowPaymentsSecretKey = configuration().nowPaymentsSecretKey;
 
 @Injectable()
 export class PaymentsService {
   constructor(
     @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private httpService: HttpService,
   ) {}
+
+  async createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<any> {
+    try {
+      const { userId, orderId, amount, currency } = createInvoiceDto;
+      const successUrl = this._getSuccessUrl(userId, orderId, amount, currency);
+      const cancelUrl = this._getCancelUrl(userId, orderId, amount, currency);
+      const invoice = await this.httpService
+        .post(
+          'https://api.nowpayments.io/v1/invoice',
+          {
+            price_amount: createInvoiceDto.amount,
+            price_currency: createInvoiceDto.currency.toLowerCase(),
+            cancel_url: cancelUrl,
+            success_url: successUrl,
+            order_id: orderId,
+          },
+          {
+            headers: {
+              'x-api-key': nowPaymentsSecretKey,
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+        .toPromise();
+      return invoice.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async findOne(id: string): Promise<PaymentDto> {
+    return await this.paymentModel
+      .findOne({ _id: new Types.ObjectId(id) })
+      .exec();
+  }
+
+  async update(id: string, updatePaymentDto: UpdatePaymentDto) {
+    await this.paymentModel
+      .updateOne({ _id: new Types.ObjectId(id) }, updatePaymentDto)
+      .exec();
+
+    return await this.findOne(id);
+  }
 
   async create(createPaymentDto: CreatePaymentDto): Promise<PaymentDto> {
     const { userId } = createPaymentDto;
@@ -28,24 +78,24 @@ export class PaymentsService {
       { $push: { payments: createPayment } },
     );
 
-    const {
-      id,
-      status,
-      total,
-      currency,
-      createdAt,
-      updatedAt,
-      servicePaymentId,
-    } = createPayment;
+    const { id, status, amount, currency, createdAt, updatedAt, orderId } =
+      createPayment;
 
     return {
       id,
       status,
-      total,
+      amount,
       currency,
       createdAt,
       updatedAt,
-      servicePaymentId,
+      orderId,
     };
+  }
+
+  _getCancelUrl(userId, orderId, amount, currency) {
+    return `http://localhost:3001/account/deposit/cancel?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}`;
+  }
+  _getSuccessUrl(userId, orderId, amount, currency) {
+    return `http://localhost:3001/account/deposit/success?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}`;
   }
 }

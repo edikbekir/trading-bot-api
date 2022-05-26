@@ -2,6 +2,7 @@ import { Document } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { Types } from 'mongoose';
 import { Payment } from '../../payments/schemas/payment.schema';
+import { Referral } from '../../referrals/schemas/referral.schema';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -9,7 +10,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 export class User {
   id: string;
 
-  @Prop({ unique: false })
+  @Prop({ unique: true })
   username!: string;
 
   @Prop({ unique: true })
@@ -18,8 +19,20 @@ export class User {
   @Prop()
   password!: string;
 
+  @Prop()
+  referredBy: string;
+
+  @Prop()
+  createdAt: Date;
+
   @Prop({ type: [Types.ObjectId], ref: Payment.name })
   payments: Payment[];
+
+  @Prop({ type: [Types.ObjectId], ref: Referral.name })
+  referrals: Referral[];
+
+  @Prop()
+  balance!: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

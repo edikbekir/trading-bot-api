@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class CreatePaymentDto {
+export class CreateInvoiceDto {
   @ApiProperty()
   @IsString()
   amount!: string;
@@ -12,13 +12,9 @@ export class CreatePaymentDto {
 
   @ApiProperty()
   @IsString()
-  status!: string;
+  orderId!: string;
 
   @ApiProperty()
   @IsString()
   userId!: string;
-
-  @ApiProperty()
-  @IsString()
-  orderId!: string;
 }

@@ -13,6 +13,8 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
 import { TransformInterceptor } from '../transform.interceptor';
+import { get } from 'http';
+import { ReferralDto } from 'src/referrals/dto/referral.dto';
 
 @ApiTags('Users')
 @UseInterceptors(TransformInterceptor)
@@ -41,5 +43,10 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<boolean> {
     return this.usersService.remove(id);
+  }
+
+  @Get(':username/referrals')
+  getReferralsByUserId(@Param('username') username: string) {
+    return this.usersService.getReferralsByUserName(username);
   }
 }

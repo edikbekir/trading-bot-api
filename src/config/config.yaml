@@ -7,6 +7,8 @@ db:
     params:
       retryWrites: true
       w: 'majority'
+nowpayments:
+  secret_key: 'PH83X8P-NPMM9R6-MHXCMND-DVH3JYD'
 storage:
   bucket:
     # TODO: Should be changed to coinlister-bucket
