@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Payment } from 'src/payments/schemas/payment.schema';
 import { Referral } from 'src/referrals/schemas/referral.schema';
+import { Transition } from 'src/transitions/schemas/transition.schema';
 
 export class UserDto {
   @ApiProperty()
@@ -17,6 +18,9 @@ export class UserDto {
 
   @ApiProperty()
   referrals: Referral[];
+
+  @ApiProperty()
+  transitions: Transition[];
 
   @ApiProperty()
   referredBy: string;

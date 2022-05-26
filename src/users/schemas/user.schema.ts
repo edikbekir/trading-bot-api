@@ -5,6 +5,7 @@ import { Payment } from '../../payments/schemas/payment.schema';
 import { Referral } from '../../referrals/schemas/referral.schema';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Transition } from 'src/transitions/schemas/transition.schema';
 
 @Schema({ id: true })
 export class User {
@@ -27,6 +28,9 @@ export class User {
 
   @Prop({ type: [Types.ObjectId], ref: Payment.name })
   payments: Payment[];
+
+  @Prop({ type: [Types.ObjectId], ref: Transition.name })
+  transitions: Transition[];
 
   @Prop({ type: [Types.ObjectId], ref: Referral.name })
   referrals: Referral[];

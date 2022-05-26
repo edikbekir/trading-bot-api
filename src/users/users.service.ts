@@ -81,6 +81,7 @@ export class UsersService {
       .findOne({ _id: new Types.ObjectId(id) })
       .populate({ path: 'payments', options: { sort: { createdAt: -1 } } })
       .populate({ path: 'referrals', options: { sort: { createdAt: -1 } } })
+      .populate({ path: 'transitions', options: { sort: { createdAt: -1 } } })
       .exec()
       .then(this.toUserDto);
   }
@@ -115,6 +116,7 @@ export class UsersService {
       referredBy,
       createdAt,
       referrals,
+      transitions,
       balance,
     } = data;
 
@@ -127,6 +129,7 @@ export class UsersService {
       createdAt,
       referrals,
       balance,
+      transitions,
     };
   }
 

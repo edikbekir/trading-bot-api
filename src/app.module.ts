@@ -10,6 +10,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { PaymentsModule } from './payments/payment.module';
 import { ReferralModule } from './referrals/referral.module';
+import { TransitionModule } from './transitions/transition.module';
 
 const CORE_MODULES = [
   ConfigModule,
@@ -21,7 +22,13 @@ const CORE_MODULES = [
 ];
 
 @Module({
-  imports: [...CORE_MODULES, UsersModule, PaymentsModule, ReferralModule],
+  imports: [
+    ...CORE_MODULES,
+    UsersModule,
+    PaymentsModule,
+    ReferralModule,
+    TransitionModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
