@@ -12,6 +12,7 @@ import { PaymentsModule } from './payments/payment.module';
 import { ReferralModule } from './referrals/referral.module';
 import { TransitionModule } from './transitions/transition.module';
 import { DepositsModule } from './deposits/deposits.module';
+import { WithdrawalsModule } from './withdrawals/withdrawals.module';
 
 const CORE_MODULES = [
   ConfigModule,
@@ -30,6 +31,7 @@ const CORE_MODULES = [
     ReferralModule,
     TransitionModule,
     DepositsModule,
+    WithdrawalsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

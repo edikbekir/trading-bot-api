@@ -83,6 +83,7 @@ export class UsersService {
       .populate({ path: 'referrals', options: { sort: { createdAt: -1 } } })
       .populate({ path: 'transitions', options: { sort: { createdAt: -1 } } })
       .populate({ path: 'deposits', options: { sort: { createdAt: -1 } } })
+      .populate({ path: 'withdrawals', options: { sort: { createdAt: -1 } } })
       .exec()
       .then(this.toUserDto);
   }
@@ -120,6 +121,7 @@ export class UsersService {
       transitions,
       deposits,
       balance,
+      withdrawals,
     } = data;
 
     return {
@@ -133,6 +135,7 @@ export class UsersService {
       balance,
       transitions,
       deposits,
+      withdrawals,
     };
   }
 

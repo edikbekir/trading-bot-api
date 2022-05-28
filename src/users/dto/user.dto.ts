@@ -3,6 +3,7 @@ import { Deposit } from 'src/deposits/schemas/deposit.schema';
 import { Payment } from 'src/payments/schemas/payment.schema';
 import { Referral } from 'src/referrals/schemas/referral.schema';
 import { Transition } from 'src/transitions/schemas/transition.schema';
+import { Withdrawal } from 'src/withdrawals/schemas/withdrawal.schema';
 
 export class UserDto {
   @ApiProperty()
@@ -25,6 +26,9 @@ export class UserDto {
 
   @ApiProperty()
   transitions: Transition[];
+
+  @ApiProperty()
+  withdrawals: Withdrawal[];
 
   @ApiProperty()
   referredBy: string;
