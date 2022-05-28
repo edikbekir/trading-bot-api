@@ -6,7 +6,7 @@ import { Referral } from '../../referrals/schemas/referral.schema';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transition } from 'src/transitions/schemas/transition.schema';
-
+import { Deposit } from 'src/deposits/schemas/deposit.schema';
 @Schema({ id: true })
 export class User {
   id: string;
@@ -34,6 +34,9 @@ export class User {
 
   @Prop({ type: [Types.ObjectId], ref: Referral.name })
   referrals: Referral[];
+
+  @Prop({ type: [Types.ObjectId], ref: Deposit.name })
+  deposits: Deposit[];
 
   @Prop()
   balance!: string;

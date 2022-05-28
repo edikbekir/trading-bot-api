@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { PaymentsModule } from './payments/payment.module';
 import { ReferralModule } from './referrals/referral.module';
 import { TransitionModule } from './transitions/transition.module';
+import { DepositsModule } from './deposits/deposits.module';
 
 const CORE_MODULES = [
   ConfigModule,
@@ -28,6 +29,7 @@ const CORE_MODULES = [
     PaymentsModule,
     ReferralModule,
     TransitionModule,
+    DepositsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
