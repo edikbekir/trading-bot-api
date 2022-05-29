@@ -38,6 +38,7 @@ export class PaymentsService {
           {
             price_amount: createInvoiceDto.amount,
             price_currency: createInvoiceDto.currency.toLowerCase(),
+            pay_currency: createInvoiceDto.payCurrency.toLowerCase(),
             cancel_url: cancelUrl,
             success_url: successUrl,
             order_id: orderId,

@@ -17,4 +17,8 @@ export class CreateInvoiceDto {
   @ApiProperty()
   @IsString()
   userId!: string;
+
+  @ApiProperty()
+  @IsString()
+  payCurrency!: string;
 }
