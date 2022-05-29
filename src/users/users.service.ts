@@ -89,8 +89,33 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDto> {
-    await this.userModel.updateOne({ id }, updateUserDto).exec();
+    const { email, oldPassword, newPassword, repeatPassword } = updateUserDto;
 
+    const user = await this.userModel.findOne({
+      _id: new Types.ObjectId(id),
+    });
+
+    if (!user) {
+      throw new HttpException('user does not exist', HttpStatus.BAD_REQUEST);
+    }
+
+    if (email) {
+      user.email = email;
+    }
+    if (oldPassword && newPassword && repeatPassword) {
+      if (
+        newPassword === repeatPassword &&
+        bcrypt.compare(oldPassword, user.password)
+      ) {
+        user.password = newPassword;
+      } else {
+        throw new HttpException(
+          'No enough data for updating',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+    await user.save();
     return this.findOne(id);
   }
 
@@ -101,12 +126,11 @@ export class UsersService {
   }
 
   async getReferralsByUserName(username: string) {
-    const res = await this.userModel
+    await this.userModel
       .findOne({ username: username })
       .populate({ path: 'referrals', options: { sort: { createdAt: -1 } } })
       .exec()
-      .then((data) => console.log(data.referrals));
-    console.log(res);
+      .then((data) => data.referrals);
   }
 
   toUserDto(data: User): UserDto {
