@@ -13,6 +13,9 @@ export class Payment {
   @Prop({ unique: true })
   orderId: string;
 
+  @Prop({ unique: true })
+  uniqPaymentId: string;
+
   @Prop()
   updatedAt: Date;
 

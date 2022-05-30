@@ -73,19 +73,19 @@ export class UsersService {
   }
 
   async findAll(permissionToken: string): Promise<UserDto[]> {
-    // if (permissionToken === TOKEN) {
-    const users: User[] = await this.userModel
-      .find()
-      .populate({ path: 'payments', options: { sort: { createdAt: -1 } } })
-      .populate({ path: 'referrals', options: { sort: { createdAt: -1 } } })
-      .populate({ path: 'transitions', options: { sort: { createdAt: -1 } } })
-      .populate({ path: 'deposits', options: { sort: { createdAt: -1 } } })
-      .populate({ path: 'withdrawals', options: { sort: { createdAt: -1 } } })
-      .exec();
-    return users.map(this.toUserDto);
-    // } else {
-    //   return [];
-    // }
+    if (permissionToken === TOKEN) {
+      const users: User[] = await this.userModel
+        .find()
+        .populate({ path: 'payments', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'referrals', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'transitions', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'deposits', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'withdrawals', options: { sort: { createdAt: -1 } } })
+        .exec();
+      return users.map(this.toUserDto);
+    } else {
+      return [];
+    }
   }
 
   async findOne(id: string): Promise<UserDto> {

@@ -26,12 +26,23 @@ export class PaymentsService {
     private httpService: HttpService,
   ) {}
 
+  generateUniqPaymentId() {
+    const chars =
+      '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const uniqLength = 12;
+    let uniq = '';
+    for (let i = 0; i <= uniqLength; i++) {
+      const randomNumber = Math.floor(Math.random() * chars.length);
+      uniq += chars.substring(randomNumber, randomNumber + 1);
+    }
+    return uniq;
+  }
+
   async createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<any> {
     try {
       const { userId, orderId, amount, currency } = createInvoiceDto;
       const successUrl = this._getSuccessUrl(userId, orderId, amount, currency);
       const cancelUrl = this._getCancelUrl(userId, orderId, amount, currency);
-      console.log(successUrl);
       const invoice = await this.httpService
         .post(
           'https://api.nowpayments.io/v1/invoice',
@@ -51,7 +62,8 @@ export class PaymentsService {
           },
         )
         .toPromise();
-      return invoice.data;
+      console.log(successUrl);
+      return { result: 'success', invoice_url: invoice.data.invoice_url };
     } catch (e) {
       console.log(e);
     }
@@ -152,9 +164,11 @@ export class PaymentsService {
   }
 
   _getCancelUrl(userId, orderId, amount, currency) {
-    return `http://localhost:3001/account/deposit/cancel?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}`;
+    const uniqPaymentId = this.generateUniqPaymentId();
+    return `http://localhost:3001/account/deposit/cancel?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}&uniqPaymentId=${uniqPaymentId}`;
   }
   _getSuccessUrl(userId, orderId, amount, currency) {
-    return `http://localhost:3001/account/deposit/success?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}`;
+    const uniqPaymentId = this.generateUniqPaymentId();
+    return `http://localhost:3001/account/deposit/success?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}&uniqPaymentId=${uniqPaymentId}`;
   }
 }
