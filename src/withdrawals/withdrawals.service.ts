@@ -77,6 +77,14 @@ export class WithdrawalsService {
     }
   }
 
+  async updateWithdrawal(id) {
+    const withdrawal = await this.withdrawalModel.findOne({
+      _id: new Types.ObjectId(id),
+    });
+    withdrawal.status = 'closed';
+    await withdrawal.save();
+  }
+
   getAlreadyWithdrawnFundsToday(user) {
     const now = new Date().toDateString();
     const result = user.withdrawals.filter(
