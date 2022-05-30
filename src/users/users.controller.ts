@@ -13,8 +13,6 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
 import { TransformInterceptor } from '../transform.interceptor';
-import { get } from 'http';
-import { ReferralDto } from 'src/referrals/dto/referral.dto';
 
 @ApiTags('Users')
 @UseInterceptors(TransformInterceptor)
@@ -22,9 +20,9 @@ import { ReferralDto } from 'src/referrals/dto/referral.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  findAll(): Promise<UserDto[]> {
-    return this.usersService.findAll();
+  @Get('/:token')
+  findAll(@Param('token') token: string): Promise<UserDto[]> {
+    return this.usersService.findAll(token);
   }
 
   @Get(':id')

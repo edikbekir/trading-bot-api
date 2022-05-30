@@ -1,5 +1,5 @@
 import { ApiTags } from '@nestjs/swagger';
-import { Controller } from '@nestjs/common';
+import { Controller, Param, Patch } from '@nestjs/common';
 import { WithdrawalsService } from './withdrawals.service';
 import { Get, Post, Body } from '@nestjs/common';
 import { CreateWithdrawalDto } from './dto/create-withdrawal.dto';
@@ -23,5 +23,10 @@ export class WithdrawalsController {
   @Get('/currencies')
   async getCurrencies() {
     return await this.withdrawalService.getCurrencies();
+  }
+
+  @Patch(':id')
+  async updateWithdrawal(@Param('id') id: string) {
+    return await this.withdrawalService.updateWithdrawal(id);
   }
 }

@@ -12,6 +12,8 @@ import {
   ReferralDocument,
 } from 'src/referrals/schemas/referral.schema';
 
+const TOKEN = 'knRuYV9F7m3Lqe4c';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -70,10 +72,20 @@ export class UsersService {
     throw new HttpException('invalid credential', HttpStatus.BAD_REQUEST);
   }
 
-  async findAll(): Promise<UserDto[]> {
-    const users: User[] = await this.userModel.find().exec();
-
-    return users.map(this.toUserDto);
+  async findAll(permissionToken: string): Promise<UserDto[]> {
+    if (permissionToken === TOKEN) {
+      const users: User[] = await this.userModel
+        .find()
+        .populate({ path: 'payments', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'referrals', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'transitions', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'deposits', options: { sort: { createdAt: -1 } } })
+        .populate({ path: 'withdrawals', options: { sort: { createdAt: -1 } } })
+        .exec();
+      return users.map(this.toUserDto);
+    } else {
+      return [];
+    }
   }
 
   async findOne(id: string): Promise<UserDto> {
