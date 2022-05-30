@@ -8,12 +8,12 @@ import { Deposit, DepositDocument } from './schemas/deposit.schema';
 const DEPOSITS = [
   {
     id: 0,
-    title: 'Тариф на 1 день',
+    title: 'Тариф на 3 дня',
     info: ['1.4% ставка в день', 'Возврат депозита через 24 часа'],
     interestRate: 1.4,
     capitalisation: false,
     fee: 0.1,
-    periods: 1,
+    periods: 3,
   },
   {
     id: 1,

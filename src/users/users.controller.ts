@@ -20,7 +20,7 @@ import { TransformInterceptor } from '../transform.interceptor';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('/:token')
+  @Get(':token/getAll')
   findAll(@Param('token') token: string): Promise<UserDto[]> {
     return this.usersService.findAll(token);
   }
