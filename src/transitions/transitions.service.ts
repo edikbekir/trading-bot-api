@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Transition,
   TransitionDocument,
-} from 'src/transitions/schemas/Transition.schema';
+} from 'src/transitions/schemas/transition.schema';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
 
