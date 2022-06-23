@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
   app.enableCors();
 
@@ -13,6 +13,13 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://bitrade.tech');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    next();
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Trading Bot')
