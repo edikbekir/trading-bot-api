@@ -5,9 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Transition,
   TransitionDocument,
-} from '../transitions/schemas/Transition.schema';
+} from 'src/transitions/schemas/Transition.schema';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '../users/schemas/user.schema';
+import { User, UserDocument } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class TransitionsService {

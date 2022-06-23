@@ -1,8 +1,8 @@
 import { Document } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { Types } from 'mongoose';
-import { Payment } from '../../payments/schemas/payment.schema';
-import { Referral } from '../../referrals/schemas/referral.schema';
+import { Payment } from 'src/payments/schemas/payment.schema';
+import { Referral } from 'src/referrals/schemas/referral.schema';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transition } from 'src/transitions/schemas/transition.schema';

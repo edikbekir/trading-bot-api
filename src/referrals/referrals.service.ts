@@ -5,9 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Referral,
   ReferralDocument,
-} from '../Referrals/schemas/Referral.schema';
+} from 'src/referrals/schemas/referral.schema';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '../users/schemas/user.schema';
+import { User, UserDocument } from 'src/users/schemas/user.schema';
 import { Types } from 'mongoose';
 import { UpdateReferralDto } from './dto/update-referral.dto';
 
