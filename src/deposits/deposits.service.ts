@@ -4,6 +4,10 @@ import { User, UserDocument } from 'src/users/schemas/user.schema';
 import { Model, Types } from 'mongoose';
 import { CreateDepositDto, BuildDepositDto } from './dto/create-deposit.dto';
 import { Deposit, DepositDocument } from './schemas/deposit.schema';
+import {
+  Referral,
+  ReferralDocument,
+} from 'src/referrals/schemas/referral.schema';
 
 const DEPOSITS = [
   {
@@ -49,6 +53,7 @@ export class DepositsService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Deposit.name) private depositModel: Model<DepositDocument>,
+    @InjectModel(Referral.name) private referralModel: Model<ReferralDocument>,
   ) {}
 
   async create(createDepositDto: CreateDepositDto) {
@@ -94,16 +99,57 @@ export class DepositsService {
         _id: new Types.ObjectId(userId),
       })
       .populate({ path: 'deposits', options: { sort: { createdAt: -1 } } });
-    user.deposits.forEach(async (deposit) => {
-      const endTime = deposit.endDate.getTime();
-      const currentTime = new Date().getTime();
-      if (currentTime > endTime) {
+    user.deposits
+      .filter((d) => d.status === 'opened')
+      .forEach(async (deposit) => {
+        const endTime = deposit.endDate.getTime();
+        const currentTime = new Date().getTime();
+        // if (currentTime > endTime) {
+        this.updateReferrals(user, deposit.income);
         await this.depositModel.findOneAndUpdate(
           { _id: new Types.ObjectId(deposit.id) },
           { status: 'closed' },
         );
-      }
+        // }
     });
+  }
+
+  async updateReferrals(user, income) {
+    if (user.referredBy) {
+      const parentUser = await this.userModel
+        .findOne({
+          username: user.referredBy,
+        })
+        .populate('referrals');
+
+      parentUser.balance = String(
+        parseFloat(parentUser.balance || '0') +
+          parseFloat(String(Number(income) * 0.05)),
+      );
+      parentUser.referrals.map(async (r) => {
+        if (r.name === user.username) {
+          await this.referralModel
+            .updateOne(
+              {
+                _id: new Types.ObjectId(r.id),
+              },
+              {
+                reward: String(
+                  parseFloat(r.reward || '0') +
+                    parseFloat(String(Number(income) * 0.05)),
+                ),
+                amount: String(
+                  parseFloat(r.amount || '0') +
+                    parseFloat(String(Number(income))),
+                ),
+              },
+            )
+            .exec();
+        }
+      });
+
+      await parentUser.save();
+    }
   }
 
   buildDepositData(data: BuildDepositDto) {

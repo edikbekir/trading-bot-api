@@ -108,42 +108,6 @@ export class PaymentsService {
 
     await currentUser.save();
 
-    if (currentUser.referredBy) {
-      const parentUser = await this.userModel
-        .findOne({
-          username: currentUser.referredBy,
-        })
-        .populate('referrals');
-
-      parentUser.balance = String(
-        parseFloat(parentUser.balance || '0') +
-          parseFloat(String(Number(createPaymentDto.amount) * 0.05)),
-      );
-      parentUser.referrals.map(async (r) => {
-        if (r.name === currentUser.username) {
-          await this.referralModel
-            .updateOne(
-              {
-                _id: new Types.ObjectId(r.id),
-              },
-              {
-                reward: String(
-                  parseFloat(r.reward || '0') +
-                    parseFloat(String(Number(createPaymentDto.amount) * 0.05)),
-                ),
-                amount: String(
-                  parseFloat(r.amount || '0') +
-                    parseFloat(String(Number(createPaymentDto.amount))),
-                ),
-              },
-            )
-            .exec();
-        }
-      });
-
-      await parentUser.save();
-    }
-
     await this.userModel.findOneAndUpdate(
       { _id: new Types.ObjectId(userId) },
       { $push: { payments: createPayment } },
