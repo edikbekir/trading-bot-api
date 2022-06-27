@@ -58,8 +58,8 @@ export class UsersService {
     return this.toUserDto(createdUser);
   }
 
-  async findByLogin({ email, password }): Promise<UserDto> {
-    const user = await this.query({ email });
+  async findByLogin({ username, password }): Promise<UserDto> {
+    const user = await this.query({ username });
 
     if (!user) {
       throw new HttpException('user does not exists', HttpStatus.BAD_REQUEST);
