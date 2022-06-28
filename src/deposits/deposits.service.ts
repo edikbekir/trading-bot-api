@@ -9,42 +9,44 @@ import {
   ReferralDocument,
 } from 'src/referrals/schemas/referral.schema';
 
+const ONE_DAY = 1;
+
 const DEPOSITS = [
   {
     id: 0,
-    title: 'Тариф на 3 дня',
+    title: '1 круг',
     info: ['1.4% ставка в день', 'Возврат депозита через 24 часа'],
-    interestRate: 1.4,
+    interestRate: 15,
     capitalisation: false,
-    fee: 0.1,
-    periods: 3,
+    fee: 3,
+    periods: 1,
   },
   {
     id: 1,
-    title: 'Тариф на 5 дней',
+    title: '3 круга',
     info: ['1.5% ставка в день', 'Возврат депозита через 5 дней'],
-    interestRate: 1.5,
+    interestRate: 15,
     capitalisation: true,
-    fee: 0.1,
-    periods: 5,
+    fee: 3,
+    periods: 3,
   },
   {
     id: 2,
-    title: 'Тариф на 15 дней',
+    title: '6 кругов',
     info: ['1.6% ставка в день', 'Возврат депозита через 15 дней'],
-    interestRate: 1.6,
+    interestRate: 15,
     capitalisation: true,
-    fee: 0.1,
-    periods: 15,
+    fee: 3,
+    periods: 6,
   },
   {
     id: 3,
-    title: 'Тариф на 30 дней',
+    title: '9 кругов',
     info: ['1.7% ставка в день', 'Возврат депозита через 30 дней'],
-    interestRate: 1.7,
+    interestRate: 15,
     capitalisation: true,
-    fee: 0.1,
-    periods: 30,
+    fee: 3,
+    periods: 9,
   },
 ];
 
@@ -104,14 +106,20 @@ export class DepositsService {
       .forEach(async (deposit) => {
         const endTime = deposit.endDate.getTime();
         const currentTime = new Date().getTime();
-        // if (currentTime > endTime) {
-        this.updateReferrals(user, deposit.income);
-        await this.depositModel.findOneAndUpdate(
-          { _id: new Types.ObjectId(deposit.id) },
-          { status: 'closed' },
-        );
-        // }
-    });
+        if (currentTime > endTime) {
+          this.updateReferrals(user, deposit.income);
+          await this.depositModel.findOneAndUpdate(
+            { _id: new Types.ObjectId(deposit.id) },
+            { status: 'closed' },
+          );
+          user.balance = String(
+            parseFloat(user.balance || '0') +
+              parseFloat(String(Number(deposit.income))) +
+              parseFloat(String(Number(deposit.amount))),
+          );
+          user.save();
+        }
+      });
   }
 
   async updateReferrals(user, income) {
@@ -153,7 +161,7 @@ export class DepositsService {
   }
 
   buildDepositData(data: BuildDepositDto) {
-    const endDate = this.addDays(new Date(), data.periods);
+    const endDate = this.addDays(new Date(), ONE_DAY);
     const total = Number.parseFloat(
       String(
         Number(data.amount) *

@@ -63,6 +63,7 @@ export class PaymentsService {
         )
         .toPromise();
       console.log(successUrl);
+      console.log(cancelUrl);
       return { result: 'success', invoice_url: invoice.data.invoice_url };
     } catch (e) {
       console.log(e);
@@ -101,12 +102,13 @@ export class PaymentsService {
       { $push: { payments: createPayment } },
     );
 
-    currentUser.balance = String(
-      parseFloat(currentUser.balance || '0') +
-        parseFloat(createPaymentDto.amount),
-    );
-
-    await currentUser.save();
+    if (createPaymentDto.status === 'finished') {
+      currentUser.balance = String(
+        parseFloat(currentUser.balance || '0') +
+          parseFloat(createPaymentDto.amount),
+      );
+      await currentUser.save();
+    }
 
     await this.userModel.findOneAndUpdate(
       { _id: new Types.ObjectId(userId) },
