@@ -106,19 +106,19 @@ export class DepositsService {
       .forEach(async (deposit) => {
         const endTime = deposit.endDate.getTime();
         const currentTime = new Date().getTime();
-        // if (currentTime > endTime) {
-        this.updateReferrals(user, deposit.income);
-        await this.depositModel.findOneAndUpdate(
-          { _id: new Types.ObjectId(deposit.id) },
-          { status: 'closed' },
-        );
-        user.balance = String(
-          parseFloat(user.balance || '0') +
-            parseFloat(String(Number(deposit.income))) +
-            parseFloat(String(Number(deposit.amount))),
-        );
-        user.save();
-        // }
+        if (currentTime > endTime) {
+          this.updateReferrals(user, deposit.income);
+          await this.depositModel.findOneAndUpdate(
+            { _id: new Types.ObjectId(deposit.id) },
+            { status: 'closed' },
+          );
+          user.balance = String(
+            parseFloat(user.balance || '0') +
+              parseFloat(String(Number(deposit.income))) +
+              parseFloat(String(Number(deposit.amount))),
+          );
+          user.save();
+        }
       });
   }
 
