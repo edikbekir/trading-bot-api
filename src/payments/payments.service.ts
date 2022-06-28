@@ -131,10 +131,10 @@ export class PaymentsService {
 
   _getCancelUrl(userId, orderId, amount, currency) {
     const uniqPaymentId = this.generateUniqPaymentId();
-    return `http://localhost:3001/account/deposit/cancel?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}&uniqPaymentId=${uniqPaymentId}`;
+    return `https://bitrade.tech/account/deposit/cancel?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}&uniqPaymentId=${uniqPaymentId}`;
   }
   _getSuccessUrl(userId, orderId, amount, currency) {
     const uniqPaymentId = this.generateUniqPaymentId();
-    return `http://localhost:3001/account/deposit/success?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}&uniqPaymentId=${uniqPaymentId}`;
+    return `https://bitrade.tech/account/deposit/success?orderId=${orderId}&userId=${userId}&amount=${amount}&currency=${currency}&uniqPaymentId=${uniqPaymentId}`;
   }
 }
