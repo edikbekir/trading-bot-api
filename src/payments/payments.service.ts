@@ -62,8 +62,6 @@ export class PaymentsService {
           },
         )
         .toPromise();
-      console.log(successUrl);
-      console.log(cancelUrl);
       return { result: 'success', invoice_url: invoice.data.invoice_url };
     } catch (e) {
       console.log(e);
