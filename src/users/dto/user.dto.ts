@@ -38,4 +38,7 @@ export class UserDto {
 
   @ApiProperty()
   balance: string;
+
+  @ApiProperty()
+  isConfirmed: boolean;
 }

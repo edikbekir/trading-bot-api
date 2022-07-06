@@ -44,6 +44,12 @@ export class User {
 
   @Prop()
   balance!: string;
+
+  @Prop()
+  isConfirmed!: boolean;
+
+  @Prop()
+  confirmationToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -11,6 +11,7 @@ import {
   Referral,
   ReferralDocument,
 } from 'src/referrals/schemas/referral.schema';
+import { MailService } from 'src/mail/mail.service';
 
 const TOKEN = 'knRuYV9F7m3Lqe4c';
 
@@ -19,6 +20,7 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Referral.name) private referralModel: Model<ReferralDocument>,
+    private mailService: MailService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDto> {
@@ -48,16 +50,42 @@ export class UsersService {
       );
     }
 
+    const emailToken = this.generateToken();
+
     const createdUser = new this.userModel({
       ...createUserDto,
       balance: '0',
       createdAt: new Date(),
+      isConfirmed: false,
+      confirmationToken: emailToken,
     });
     await createdUser.save();
+    const resultUser = this.toUserDto(createdUser);
 
-    return this.toUserDto(createdUser);
+    await this.mailService.sendUserConfirmation(resultUser, emailToken);
+
+    return resultUser;
   }
 
+  generateToken() {
+    return Math.random().toString(36).substr(2);
+  }
+
+  async findAndUpdateByConfirmationToken({ token }) {
+    const user = await this.userModel.findOne({
+      confirmationToken: token,
+      isConfirmed: false,
+    });
+
+    if (!user) {
+      throw new HttpException('user does not exists', HttpStatus.BAD_REQUEST);
+    }
+
+    user.isConfirmed = true;
+    await user.save();
+
+    return user;
+  }
   async findByLogin({ username, password }): Promise<UserDto> {
     const user = await this.query({ username });
 
@@ -158,6 +186,7 @@ export class UsersService {
       deposits,
       balance,
       withdrawals,
+      isConfirmed,
     } = data;
 
     return {
@@ -172,6 +201,7 @@ export class UsersService {
       transitions,
       deposits,
       withdrawals,
+      isConfirmed,
     };
   }
 

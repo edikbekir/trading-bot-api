@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -23,6 +23,14 @@ export class AuthController {
     const token = this.authService.signPayload(payload);
 
     return { user, token };
+  }
+
+  @Put('confirmation')
+  @ApiCreatedResponse({ description: 'Email has been confirmed' })
+  async confirmation(@Body() token: any) {
+    const user = await this.userService.findAndUpdateByConfirmationToken(token);
+
+    return user;
   }
 
   @Post('login')

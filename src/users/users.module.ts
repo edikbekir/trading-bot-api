@@ -7,9 +7,11 @@ import {
   Referral,
   ReferralSchema,
 } from 'src/referrals/schemas/referral.schema';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
+    MailModule,
     MongooseModule.forFeature([
       {
         name: User.name,
